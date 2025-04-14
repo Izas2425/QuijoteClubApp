@@ -1,7 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id("com.google.gms.google-services")
+
+
 }
 
 android {
@@ -61,6 +64,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.navigation.runtime.android)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,6 +74,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 
     // copio al registrar la app en firebase
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
@@ -80,15 +87,15 @@ dependencies {
 
     // Para Google Maps
     // implementation("com.google.android.gms:play-services-maps:19.0.0")
-    implementation(libs.play.services.maps)
+  implementation(libs.play.services.maps)
 
     // implementation("com.google.maps.android:maps-compose:2.11.2")
-    implementation(libs.maps.compose)
+  implementation(libs.maps.compose)
 
     // implementation("com.google.android.gms:play-services-location:21.3.0")
-    implementation(libs.play.services.location)
+  implementation(libs.play.services.location)
 
     //implementation("io.coil-kt:coil-compose:2.5.0")
-    implementation(libs.coil.compose)
+   implementation(libs.coil.compose)
 
 }
