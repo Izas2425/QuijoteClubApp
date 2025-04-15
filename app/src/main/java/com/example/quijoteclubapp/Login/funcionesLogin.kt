@@ -1,10 +1,11 @@
 package com.example.quijoteclubapp.Login
 
 import android.app.Activity
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,20 +31,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
+import com.example.quijoteclubapp.DatosUsuario.DatosUsuarioViewModel
 import com.example.quijoteclubapp.R
 import com.example.quijoteclubapp.Rutas
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 @Composable
-fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel){
+fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel, datosUsuarioVM: DatosUsuarioViewModel){
     val context = LocalContext.current
 
     val isLoading by loginVM.isLoading.collectAsState()
@@ -51,6 +59,8 @@ fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel){
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var isRegistering by remember { mutableStateOf(false) } // Para alternar entre Login y Registro
+
+    var emailUsuario by remember { mutableStateOf("") }
 
     // lanza la pantalla con las cuentas de google para elegir
     // Una vez seleccionada la cuenta de google, obtiene el idToken para pasarlo a loginWithGoogle
@@ -88,6 +98,22 @@ fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel){
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(text = "Bienvenido a QuijoteClub" ,
+            color = colorResource(R.color.texto),
+            fontSize = 20.sp,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.logoquijotclubapp),
+            contentDescription = "Imagen decorativa",
+            modifier = Modifier
+                .height(80.dp) // Puedes ajustar el tamaño a tu gusto
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        )
+
         Text(
             text = if (isRegistering) "Registrar Cuenta" else "Iniciar Sesión",
             color = colorResource(R.color.texto),
@@ -163,7 +189,7 @@ fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel){
             Text(text = it, color = MaterialTheme.colorScheme.error)
         }
 
-        var mostrarDialogo by remember { mutableStateOf(false) }
+        var mostrarDialogoRole by remember { mutableStateOf(false) }
 
 
         LaunchedEffect(loginSuccess) { //
@@ -171,19 +197,25 @@ fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel){
             if (loginSuccess)  {
                 Toast.makeText(context, "Login correcto", Toast.LENGTH_SHORT).show()
                 // se guarda el email del usuario que se ha identificado en emailUsuario
-                val emailUsuario = loginVM.getCurrentUser()?.email
+                emailUsuario = loginVM.getCurrentUser()?.email!!
+                //datosUsuarioVM.setEmail(emailUsuario!!)
                 // si el usuario no está en la bd, lo añade
                 // y como no existe en la bd, es su primera vez por lo que rellena el perfil
                 if (!loginVM.existeUsuario()){
                     loginVM.addUsuario(emailUsuario!!)
-                    // la primera vez le envia a rellenar el perfil
+                    // la primera vez le solicita el role: aficionado o padre/madre
+                    mostrarDialogoRole = true
                    // navController.navigate(Rutas.registrar)
 
                 }else {
                        val role = loginVM.getRolePorEmail(emailUsuario!!)
 
                 }
-
+            }
+        }
+        if (mostrarDialogoRole){
+            DialogoSeleccionarRole(navController, datosUsuarioVM,emailUsuario){
+                mostrarDialogoRole = false
             }
         }
 
@@ -198,6 +230,86 @@ fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel){
 
         Esto garantiza que las acciones, como mostrar un Toast o navegar, ocurran solo cuando realmente cambien las condiciones, evitando comportamientos inesperados debido a las recomposiciones.
          */
+    }
+
+}
+
+// Esta funcion muestra un dialogo con dos botones para que elija su role
+// Entre los dos que puede ser un usuario que se da de alta: aficionado o padre/madre
+@Composable
+fun  DialogoSeleccionarRole(
+    navController: NavHostController,
+    datosUsuarioVM: DatosUsuarioViewModel,
+    emailUsuario: String,
+    onDismiss: () -> Unit
+){
+    var mostrar by remember { mutableStateOf(true)  }
+    if (mostrar) {
+        Dialog(onDismissRequest = { mostrar=false },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = true)
+        ){
+
+            Column(modifier = Modifier
+                .width(350.dp)
+                .padding(20.dp)
+                .background(Color.White, shape = RoundedCornerShape(8.dp))
+            ) {
+                Text(
+                    text = "Eres: ",
+                    color = colorResource(R.color.texto),
+                    fontSize = 15.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                Button(
+                    onClick = {
+                        mostrar = false
+                        datosUsuarioVM.setRole("Aficionado")
+                        datosUsuarioVM.actualizarUsuario(emailUsuario)
+                        navController.navigate(Rutas.aficionado) // Navega a la pantalla de usuario estándar
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.botones), // Color de fondo del botón
+                        contentColor = colorResource(R.color.textoBotones) // Color del texto
+                    )
+                ) {
+                    Text("Aficionado")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Button(
+                    onClick = {
+                        mostrar = false
+                        datosUsuarioVM.setRole("PadreMadre")
+                        datosUsuarioVM.actualizarUsuario(emailUsuario)
+                        navController.navigate(Rutas.padreMadre) // Navega a la pantalla de administrador
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.botones), // Color de fondo del botón
+                        contentColor = colorResource(R.color.textoBotones) // Color del texto
+                    )
+                ) {
+                    Text("Padre/Madre")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        mostrar = false
+                        onDismiss()
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.botones), // Color de fondo del botón
+                        contentColor = colorResource(R.color.textoBotones) // Color del texto
+                    )
+                ) {
+                    Text("Cancelar")
+                }
+            }
+//            }
+        }
     }
 
 }

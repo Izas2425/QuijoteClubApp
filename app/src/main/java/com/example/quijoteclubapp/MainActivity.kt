@@ -15,12 +15,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.quijoteclubapp.Aficionado.VentanaAficionado
+import com.example.quijoteclubapp.DatosUsuario.DatosUsuarioViewModel
 import com.example.quijoteclubapp.Login.LoginScreen
 import com.example.quijoteclubapp.Login.LoginViewModel
+import com.example.quijoteclubapp.PadreMadre.VentanaPadreMadre
 import com.example.quijoteclubapp.ui.theme.QuijoteClubAppTheme
 
 class MainActivity : ComponentActivity() {
     val loginVM = LoginViewModel()
+    val datosUsuariVM = DatosUsuarioViewModel()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +37,13 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = Rutas.login) {
                     composable(Rutas.login) {
-                        LoginScreen(navController, loginVM)
+                        LoginScreen(navController, loginVM, datosUsuariVM)
+                    }
+                    composable(Rutas.aficionado){
+                        VentanaAficionado()
+                    }
+                    composable(Rutas.padreMadre){
+                        VentanaPadreMadre()
                     }
                 }
 

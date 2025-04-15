@@ -2,5 +2,7 @@ package com.example.quijoteclubapp
 
 object Rutas {
     val login ="login"
-    val registrar = "registrar"
+    val registrarse = "registrarse"
+    val aficionado="aficionado"
+    val padreMadre = "padreMadre"
 }
