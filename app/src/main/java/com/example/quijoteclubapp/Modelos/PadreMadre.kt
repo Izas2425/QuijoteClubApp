@@ -6,5 +6,5 @@ data class PadreMadre(
     val nombre: String = "",
     val apellidos: String = "",
     val movil: String = "",
-    val numRegistroHijo: String = ""
+    val numRegistroHijo:  List<String> = emptyList()
 )

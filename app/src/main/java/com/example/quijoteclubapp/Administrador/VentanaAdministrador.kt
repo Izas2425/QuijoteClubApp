@@ -1,4 +1,4 @@
-package com.example.quijoteclubapp.Aficionado
+package com.example.quijoteclubapp.Administrador
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,12 +14,12 @@ import androidx.compose.ui.unit.sp
 import com.example.quijoteclubapp.R
 
 @Composable
-fun VentanaAficionado(){
+fun VentanaAdministrador(){
     Column(modifier = Modifier.padding(vertical = 20.dp).fillMaxWidth()) {
 
         Spacer(modifier = Modifier.height(50.dp))
         Text(
-            text = "Ventana Aficionado",
+            text = "Ventana Administrador",
             color = colorResource(R.color.texto),
             fontSize = 20.sp,
             modifier = Modifier.padding(10.dp)

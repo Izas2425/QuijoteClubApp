@@ -205,11 +205,15 @@ fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel, datos
                     loginVM.addUsuario(emailUsuario!!)
                     // la primera vez le solicita el role: aficionado o padre/madre
                     mostrarDialogoRole = true
-                   // navController.navigate(Rutas.registrar)
 
+                // No es la primera vez que entra
                 }else {
-                       val role = loginVM.getRolePorEmail(emailUsuario!!)
-
+                    val role = loginVM.getRolePorEmail(emailUsuario!!)
+                    when (role){
+                        "Aficionado" -> navController.navigate(Rutas.aficionado)
+                        "PadreMadre" -> navController.navigate(Rutas.padreMadre)
+                        "Admin" -> navController.navigate(Rutas.admin)
+                    }
                 }
             }
         }
@@ -282,7 +286,7 @@ fun  DialogoSeleccionarRole(
                         mostrar = false
                         datosUsuarioVM.setRole("PadreMadre")
                         datosUsuarioVM.actualizarUsuario(emailUsuario)
-                        navController.navigate(Rutas.padreMadre) // Navega a la pantalla de administrador
+                        navController.navigate(Rutas.registrarse) // Navega a la pantalla de administrador
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
