@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
+import com.example.quijoteclubapp.AdminSettings.AdminSettingsViewModel
 import com.example.quijoteclubapp.DatosUsuario.DatosUsuarioViewModel
 import com.example.quijoteclubapp.R
 import com.example.quijoteclubapp.Rutas
@@ -49,7 +51,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 @Composable
-fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel, datosUsuarioVM: DatosUsuarioViewModel){
+fun LoginScreen(
+    navController: NavHostController,
+    loginVM: LoginViewModel,
+    datosUsuarioVM: DatosUsuarioViewModel,
+    adminSettingsVM: AdminSettingsViewModel
+){
     val context = LocalContext.current
 
     val isLoading by loginVM.isLoading.collectAsState()
@@ -190,6 +197,7 @@ fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel, datos
         }
 
         var mostrarDialogoRole by remember { mutableStateOf(false) }
+        var mostrarDialogoPin by remember { mutableStateOf(false) }
 
 
         LaunchedEffect(loginSuccess) { //
@@ -212,7 +220,12 @@ fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel, datos
                     when (role){
                         "Aficionado" -> navController.navigate(Rutas.aficionado)
                         "PadreMadre" -> navController.navigate(Rutas.padreMadre)
-                        "Admin" -> navController.navigate(Rutas.admin)
+                        "Admin" ->{
+                            adminSettingsVM.cargarPinAdmin()
+                            mostrarDialogoPin = true
+                            //navController.navigate(Rutas.admin)
+                        }
+
                     }
                 }
             }
@@ -220,6 +233,12 @@ fun LoginScreen(navController: NavHostController, loginVM: LoginViewModel, datos
         if (mostrarDialogoRole){
             DialogoSeleccionarRole(navController, datosUsuarioVM,emailUsuario){
                 mostrarDialogoRole = false
+            }
+        }
+
+        if (mostrarDialogoPin){
+            DialogoPinAdmin(adminSettingsVM, navController){
+                mostrarDialogoPin = false
             }
         }
 
@@ -316,4 +335,76 @@ fun  DialogoSeleccionarRole(
         }
     }
 
+}
+
+@Composable
+fun DialogoPinAdmin(
+    adminVM: AdminSettingsViewModel,
+    navController: NavHostController,
+    onDismiss: () -> Unit
+) {
+    var pinIngresado by remember { mutableStateOf("") }
+    var errorPin by remember { mutableStateOf<String?>(null) }
+
+    Dialog(onDismissRequest = { onDismiss() }) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .background(Color.White, shape = RoundedCornerShape(8.dp))
+        ) {
+
+            Text(
+                text = "Introduce el PIN de Admin: ",
+                color = colorResource(R.color.texto),
+                fontSize = 15.sp,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = pinIngresado,
+                onValueChange = { pinIngresado = it },
+                label = {
+                    Text(text = "PIN: ",
+                        color = colorResource(R.color.texto),
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(bottom = 16.dp))
+                        },
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            errorPin?.let {
+                Text(it, color = Color.Red)
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(onClick = { onDismiss() }) {
+                    Text(text = "Cancelar ",
+                        color = colorResource(R.color.texto),
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(bottom = 16.dp))
+                }
+
+                TextButton(onClick = {
+                    if (adminVM.verificarPin(pinIngresado)) {
+                        navController.navigate(Rutas.admin)
+                        onDismiss()
+                    } else {
+                        errorPin = "PIN incorrecto"
+                    }
+                }) {
+                    Text(text = "Aceptar ",
+                        color = colorResource(R.color.texto),
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(bottom = 16.dp))
+                }
+            }
+        }
+    }
 }
