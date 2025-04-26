@@ -6,5 +6,9 @@ object Rutas {
     val aficionado="aficionado"
     val padreMadre = "padreMadre"
     val admin = "admin"
+    val partidos = "partidos"
+    val jugadores = "jugadores"
+    val entrenadores = "entrenadores"
+    val eventos = "eventos"
 
 }

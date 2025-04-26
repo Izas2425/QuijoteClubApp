@@ -9,6 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.quijoteclubapp.AdminSettings.AdminSettingsViewModel
+import com.example.quijoteclubapp.Administrador.Entrenadores.VentanaEntrenadores
+import com.example.quijoteclubapp.Administrador.Eventos.VentanaEventos
+import com.example.quijoteclubapp.Administrador.Jugadores.VentanaJugadores
 import com.example.quijoteclubapp.Administrador.VentanaAdministrador
 import com.example.quijoteclubapp.Aficionado.VentanaAficionado
 import com.example.quijoteclubapp.DatosUsuario.DatosUsuarioViewModel
@@ -46,10 +49,22 @@ class MainActivity : ComponentActivity() {
                         VentanaPadreMadre()
                     }
                     composable(Rutas.admin){
-                        VentanaAdministrador()
+                        VentanaAdministrador(navController)
                     }
                     composable(Rutas.registrarse) {
                         VentanaRegistrarse(navController,loginVM,padresMadresVM,contexto)
+                    }
+                    composable(Rutas.partidos){
+                        VentanaJugadores()
+                    }
+                    composable(Rutas.jugadores){
+                        VentanaJugadores()
+                    }
+                    composable(Rutas.entrenadores){
+                        VentanaEntrenadores()
+                    }
+                    composable(Rutas.eventos){
+                        VentanaEventos()
                     }
                 }
 
