@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.LocationOn
@@ -49,7 +50,14 @@ import com.example.quijoteclubapp.Administrador.Jugadores.VentanaJugadores
 import com.example.quijoteclubapp.Administrador.Partidos.VentanaPartidos
 import com.example.quijoteclubapp.R
 import com.example.quijoteclubapp.Rutas
+import com.google.rpc.context.AttributeContext.Resource
 import kotlinx.coroutines.launch
+
+import androidx.compose.material.icons.rounded.SportsSoccer
+import androidx.compose.material.icons.rounded.SportsBasketball
+import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.filled.RecordVoiceOver
+import androidx.compose.material.icons.outlined.CalendarToday
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,6 +67,7 @@ fun VentanaAdministrador(navController: NavHostController){
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    val estadoVentana = remember { mutableStateOf("Partidos") }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -69,55 +78,95 @@ fun VentanaAdministrador(navController: NavHostController){
                 //A partir de aquí opciones del menú.
                 HorizontalDivider()
                 NavigationDrawerItem(
-                    icon = null,  // luego agrego iconos
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.SportsBasketball, // 🏀 partidos
+                            contentDescription = "Baloncesto",
+                            tint = colorResource(R.color.texto)
+                        )
+                    },
                     label = { Text(
                         text = "Partidos",
                         color = colorResource(R.color.texto)) },
                     selected = false,
-                    onClick = { navController.navigate(Rutas.partidos) }
+                    onClick = {
+                        //navController.navigate(Rutas.partidos)
+                        estadoVentana.value = "Partidos"
+                        scope.launch { drawerState.close() }
+                    }
                 )
                 NavigationDrawerItem(
-                    icon = null, // luego pongo iconos
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Person, // jugadores
+                            contentDescription = "Entrenador",
+                            tint = colorResource(R.color.texto)
+                        )
+                    }, // luego pongo iconos
                     label = { Text(
                         text = "Jugadores",
                         color = colorResource(R.color.texto)) },
                     selected = false,
-                    onClick = { navController.navigate(Rutas.jugadores)}
+                    onClick = {
+//                        navController.navigate(Rutas.jugadores)
+                        estadoVentana.value = "Jugadores"
+                        scope.launch { drawerState.close() }
+                    }
                 )
                 NavigationDrawerItem(
-                    icon = null,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.RecordVoiceOver, // 🗣️ entreadador
+                            contentDescription = "Entrenadores",
+                            tint = colorResource(R.color.texto)
+                        )
+                    },
                     label = { Text(
                         text = "Entrenadores",
                         color = colorResource(R.color.texto)) },
                     selected = false,
-                    onClick = { navController.navigate(Rutas.entrenadores) }
+                    onClick = {
+//                        navController.navigate(Rutas.entrenadores)
+                        estadoVentana.value = "Entrenadores"
+                        scope.launch { drawerState.close() }
+                    }
                 )
                 NavigationDrawerItem(
-                    icon = null,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.CalendarToday, // 📅 calendario
+                            contentDescription = "Eventos",
+                            tint = colorResource(R.color.texto)
+                        )
+                    },
                     label = { Text(
                         text = "Eventos",
                         color = colorResource(R.color.texto)) },
                     selected = false,
-                    onClick = { navController.navigate(Rutas.eventos) }
+                    onClick = {
+//                        navController.navigate(Rutas.eventos)
+                        estadoVentana.value = "Eventos"
+                        scope.launch { drawerState.close() }
+                    }
                 )
 
-                HorizontalDivider()
-                NavigationDrawerItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
-                            contentDescription = "Cerrar menú"
-                        )},
-                    label = { Text(
-                        text = "Cerrar menú",
-                        color = colorResource(R.color.texto)) },
-                    selected = false,
-                    onClick = { scope.launch {
-                        drawerState.apply {
-                            close()
-                        }
-                    }}
-                )
+//                HorizontalDivider()
+//                NavigationDrawerItem(
+//                    icon = {
+//                        Icon(
+//                            imageVector = Icons.Outlined.ArrowBack,
+//                            contentDescription = "Cerrar menú"
+//                        )},
+//                    label = { Text(
+//                        text = "Cerrar menú",
+//                        color = colorResource(R.color.texto)) },
+//                    selected = false,
+//                    onClick = { scope.launch {
+//                        drawerState.apply {
+//                            close()
+//                        }
+//                    }}
+//                )
             }
         },
     ){
@@ -153,11 +202,21 @@ fun VentanaAdministrador(navController: NavHostController){
                     .padding(innerPadding)
                     .padding(16.dp)
             ) {
-                Text(
-                    text = "Bienvenido al panel de administrador",
-                    fontSize = 24.sp,
-                    color = Color.Black
-                )
+                when (estadoVentana.value){
+                    "Partidos" -> {
+                       VentanaPartidos()
+                    }
+                    "Jugadores" -> {
+                        VentanaJugadores()
+                    }
+                    "Entrenadores" -> {
+                        VentanaEntrenadores()
+                    }
+                    "Eventos" -> {
+                        VentanaEventos()
+                    }
+                }
+
             }
         }
     }

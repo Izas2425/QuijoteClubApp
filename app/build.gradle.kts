@@ -98,4 +98,7 @@ dependencies {
     //implementation("io.coil-kt:coil-compose:2.5.0")
    implementation(libs.coil.compose)
 
+    // para el icono del balon
+    implementation ("androidx.compose.material:material-icons-extended:1.7.8")
+
 }
