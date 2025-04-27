@@ -58,6 +58,7 @@ import androidx.compose.material.icons.rounded.SportsBasketball
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.filled.RecordVoiceOver
 import androidx.compose.material.icons.outlined.CalendarToday
+import com.example.quijoteclubapp.Administrador.Jugadores.VentanaAltaJugador
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +76,7 @@ fun VentanaAdministrador(navController: NavHostController){
             ModalDrawerSheet(
                 modifier = Modifier.width(180.dp)
             ) {
-                //A partir de aquí opciones del menú.
+                //A partir de aquí opciones del menúy qué pasa al pinchar sobre cada una
                 HorizontalDivider()
                 NavigationDrawerItem(
                     icon = {
@@ -102,7 +103,7 @@ fun VentanaAdministrador(navController: NavHostController){
                             contentDescription = "Entrenador",
                             tint = colorResource(R.color.texto)
                         )
-                    }, // luego pongo iconos
+                    },
                     label = { Text(
                         text = "Jugadores",
                         color = colorResource(R.color.texto)) },
@@ -149,24 +150,6 @@ fun VentanaAdministrador(navController: NavHostController){
                         scope.launch { drawerState.close() }
                     }
                 )
-
-//                HorizontalDivider()
-//                NavigationDrawerItem(
-//                    icon = {
-//                        Icon(
-//                            imageVector = Icons.Outlined.ArrowBack,
-//                            contentDescription = "Cerrar menú"
-//                        )},
-//                    label = { Text(
-//                        text = "Cerrar menú",
-//                        color = colorResource(R.color.texto)) },
-//                    selected = false,
-//                    onClick = { scope.launch {
-//                        drawerState.apply {
-//                            close()
-//                        }
-//                    }}
-//                )
             }
         },
     ){
@@ -207,7 +190,11 @@ fun VentanaAdministrador(navController: NavHostController){
                        VentanaPartidos()
                     }
                     "Jugadores" -> {
-                        VentanaJugadores()
+                        // para que cuando pinche en el botón de añadir jugador
+                        // se cargue la ventana de alta jugador
+                        VentanaJugadores(
+                            enAddJugador = {estadoVentana.value= "AltaJugador"}
+                        )
                     }
                     "Entrenadores" -> {
                         VentanaEntrenadores()
@@ -215,10 +202,17 @@ fun VentanaAdministrador(navController: NavHostController){
                     "Eventos" -> {
                         VentanaEventos()
                     }
-                }
+                    "AltaJugador"->{
+                        // para que cuando le de a guardar en el alta del jugador
+                        // vuelva a cargar la ventana de los jugadores
+                        VentanaAltaJugador(
+                            enJugadorGuardado = {estadoVentana.value = "Jugadores"}
+                        )
+                    }
 
+
+                }
             }
         }
     }
-
 }

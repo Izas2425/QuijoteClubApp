@@ -54,18 +54,6 @@ class MainActivity : ComponentActivity() {
                     composable(Rutas.registrarse) {
                         VentanaRegistrarse(navController,loginVM,padresMadresVM,contexto)
                     }
-                    composable(Rutas.partidos){
-                        VentanaJugadores()
-                    }
-                    composable(Rutas.jugadores){
-                        VentanaJugadores()
-                    }
-                    composable(Rutas.entrenadores){
-                        VentanaEntrenadores()
-                    }
-                    composable(Rutas.eventos){
-                        VentanaEventos()
-                    }
                 }
 
             }

@@ -17,7 +17,7 @@ import com.example.quijoteclubapp.R
 fun VentanaPartidos(){
     Column(modifier = Modifier.padding(vertical = 20.dp).fillMaxWidth()) {
 
-        Spacer(modifier = Modifier.height(50.dp))
+
         Text(
             text = "Ventana Partidos",
             color = colorResource(R.color.texto),
