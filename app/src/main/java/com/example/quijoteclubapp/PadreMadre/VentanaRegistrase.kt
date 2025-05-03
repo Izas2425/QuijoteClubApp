@@ -263,35 +263,6 @@ fun botonAceptarRegistro(
 
     val numRegistro: Int? = padresMadresVM.numRegistroHijos.firstOrNull()?.toIntOrNull()
 
-    // falta comprobar que el numero de registro del hijo
-    // exista en la bd de jugadores
-//    Button(onClick =
-//    {
-//        datosJugadorVM.comprobarNumRegistroExiste(datosJugadorVM.numRegistro.value){ existe ->
-//            if (existe){
-//                habilitarBoton.value = true
-//                padresMadresVM.addPadreMadre(emailLogeado)
-//                navController.navigate(Rutas.padreMadre)
-//            }
-//            else{
-//                android.util.Log.e("Izaskun", "No existe el número de registro")
-//            }
-//        }
-//
-//
-////        padresMadresVM.addPadreMadre(emailLogeado)
-////        navController.navigate(Rutas.padreMadre)
-//    },
-//        enabled = habilitarBoton.value,
-//        colors = ButtonDefaults.buttonColors(
-//            containerColor = colorResource(R.color.botones), // Color de fondo del botón
-//            contentColor = colorResource(R.color.textoBotones) // Color del texto
-//        )
-//    )
-//    {
-//        Text(text = "Aceptar")
-//    }
-
     LaunchedEffect(numRegistro) {
         if (numRegistro != null) {
             if (numRegistro > 0) {

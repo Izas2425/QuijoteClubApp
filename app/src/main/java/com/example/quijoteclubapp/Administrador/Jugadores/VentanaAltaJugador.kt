@@ -277,9 +277,9 @@ fun categoria(datosJugadorVM: DatosJugadoresViewModel){
 
     var selectedText by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
-    var opciones = listOf<String>("Prebenjamin masculino", "Benjamin masculino", "Alevín masculino",
+    var opciones = listOf<String>("Prebenjamin", "Benjamin", "Alevín masculino",
         "Infantil masculino", "Cadete masculino", "Junior masculino", "Sub-22 masculino", "Senior masculino",
-        "Prebenjamin femenino", "Benjamin femenino", "Alevín femenino", "Infantil femenino",
+       "Alevín femenino", "Infantil femenino",
         "Cadete femenino", "Junior femenino", "Sub-22 femenino", "Senior femenino")
 
     Row(verticalAlignment = Alignment.CenterVertically,

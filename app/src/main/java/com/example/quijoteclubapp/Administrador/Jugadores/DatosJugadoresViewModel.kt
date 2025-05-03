@@ -220,6 +220,8 @@ class DatosJugadoresViewModel : ViewModel(){
         _categoria.value=""
         _fotoPerfil.value=""
         _numRegistro.value= 0
+        _imageUri.value = Uri.EMPTY
+        _imageFile.value = null
 
     }
 

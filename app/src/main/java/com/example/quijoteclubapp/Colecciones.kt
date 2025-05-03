@@ -5,4 +5,7 @@ object Colecciones {
     val PadresMadres ="padres_madres"
     val Jugadores = "jugadores"
     val Aficionados = "aficionados"
+    val Entrenadores ="entrenadores"
+    val Equipos = "equipos"
+    val Partidos = "partidos"
 }
