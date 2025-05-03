@@ -225,6 +225,7 @@ fun LoginScreen(
                             mostrarDialogoPin = true
                             //navController.navigate(Rutas.admin)
                         }
+                        "Jugador" -> navController.navigate(Rutas.jugador)
 
                     }
                 }

@@ -9,12 +9,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.quijoteclubapp.AdminSettings.AdminSettingsViewModel
-import com.example.quijoteclubapp.Administrador.Entrenadores.VentanaEntrenadores
-import com.example.quijoteclubapp.Administrador.Eventos.VentanaEventos
-import com.example.quijoteclubapp.Administrador.Jugadores.VentanaJugadores
+import com.example.quijoteclubapp.Administrador.Jugadores.DatosJugadoresViewModel
 import com.example.quijoteclubapp.Administrador.VentanaAdministrador
 import com.example.quijoteclubapp.Aficionado.VentanaAficionado
 import com.example.quijoteclubapp.DatosUsuario.DatosUsuarioViewModel
+import com.example.quijoteclubapp.Jugador.VentanaJugador
 import com.example.quijoteclubapp.Login.LoginScreen
 import com.example.quijoteclubapp.Login.LoginViewModel
 import com.example.quijoteclubapp.PadreMadre.PadresMadresViewModel
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
     val datosUsuariVM = DatosUsuarioViewModel()
     val padresMadresVM = PadresMadresViewModel ()
     val adminSettingsVM = AdminSettingsViewModel()
-
+    val datosJugadorVM = DatosJugadoresViewModel ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,11 +48,15 @@ class MainActivity : ComponentActivity() {
                         VentanaPadreMadre()
                     }
                     composable(Rutas.admin){
-                        VentanaAdministrador(navController)
+                        VentanaAdministrador(navController,datosJugadorVM, loginVM)
                     }
                     composable(Rutas.registrarse) {
-                        VentanaRegistrarse(navController,loginVM,padresMadresVM,contexto)
+                        VentanaRegistrarse(navController,loginVM,padresMadresVM,contexto, datosJugadorVM)
                     }
+                    composable(Rutas.jugador){
+                        VentanaJugador ()
+                    }
+
                 }
 
             }

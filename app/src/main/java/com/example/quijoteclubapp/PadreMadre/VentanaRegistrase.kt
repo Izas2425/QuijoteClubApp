@@ -2,7 +2,6 @@ package com.example.quijoteclubapp.PadreMadre
 
 import android.content.Context
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,20 +12,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -37,8 +32,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.util.Log
 import androidx.navigation.NavHostController
-import com.example.quijoteclubapp.DatosUsuario.DatosUsuarioViewModel
+import com.example.quijoteclubapp.Administrador.Jugadores.DatosJugadoresViewModel
 import com.example.quijoteclubapp.Login.LoginViewModel
 import com.example.quijoteclubapp.R
 import com.example.quijoteclubapp.Rutas
@@ -48,7 +44,8 @@ fun VentanaRegistrarse(
     navController: NavHostController,
     loginVM: LoginViewModel,
     padresMadresVM: PadresMadresViewModel,
-    contexto: Context
+    contexto: Context,
+    datosJugadorVM: DatosJugadoresViewModel
 ){
     val emailLogeado = loginVM.getCurrentUser()?.email
 
@@ -87,7 +84,7 @@ fun VentanaRegistrarse(
             Spacer(modifier = Modifier.height(10.dp))
             Row( modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center,verticalAlignment = Alignment.CenterVertically){
                 if (emailLogeado != null) {
-                    botonAceptarRegistro(navController,padresMadresVM, emailLogeado)
+                    botonAceptarRegistro(navController,padresMadresVM, emailLogeado, datosJugadorVM)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 botonCancelarRegistro(navController)
@@ -258,24 +255,72 @@ fun numRegistroHijo(padresMadresVM: PadresMadresViewModel){
 fun botonAceptarRegistro(
     navController: NavHostController,
     padresMadresVM: PadresMadresViewModel,
-    emailLogeado: String)
+    emailLogeado: String,
+    datosJugadorVM: DatosJugadoresViewModel
+)
 {
+    val habilitarBoton = remember { mutableStateOf(false) }
+
+    val numRegistro: Int? = padresMadresVM.numRegistroHijos.firstOrNull()?.toIntOrNull()
 
     // falta comprobar que el numero de registro del hijo
     // exista en la bd de jugadores
-    Button(onClick = {
+//    Button(onClick =
+//    {
+//        datosJugadorVM.comprobarNumRegistroExiste(datosJugadorVM.numRegistro.value){ existe ->
+//            if (existe){
+//                habilitarBoton.value = true
+//                padresMadresVM.addPadreMadre(emailLogeado)
+//                navController.navigate(Rutas.padreMadre)
+//            }
+//            else{
+//                android.util.Log.e("Izaskun", "No existe el número de registro")
+//            }
+//        }
+//
+//
+////        padresMadresVM.addPadreMadre(emailLogeado)
+////        navController.navigate(Rutas.padreMadre)
+//    },
+//        enabled = habilitarBoton.value,
+//        colors = ButtonDefaults.buttonColors(
+//            containerColor = colorResource(R.color.botones), // Color de fondo del botón
+//            contentColor = colorResource(R.color.textoBotones) // Color del texto
+//        )
+//    )
+//    {
+//        Text(text = "Aceptar")
+//    }
 
-        padresMadresVM.addPadreMadre(emailLogeado)
-        navController.navigate(Rutas.padreMadre)
-    },
+    LaunchedEffect(numRegistro) {
+        if (numRegistro != null) {
+            if (numRegistro > 0) {
+                datosJugadorVM.comprobarNumRegistroExiste(numRegistro!!) { existe ->
+                    habilitarBoton.value = existe
+                    if (!existe){
+                        Log.e("Izaskun", "No existe el número de registro")
+                    }
+                }
+            } else {
+                habilitarBoton.value = false
+            }
+        }
+    }
+
+    Button(
+        onClick = {
+            padresMadresVM.addPadreMadre(emailLogeado)
+            navController.navigate(Rutas.padreMadre)
+        },
+        enabled = habilitarBoton.value,
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(R.color.botones), // Color de fondo del botón
-            contentColor = colorResource(R.color.textoBotones) // Color del texto
+            containerColor = colorResource(R.color.botones),
+            contentColor = colorResource(R.color.textoBotones)
         )
-    )
-    {
+    ) {
         Text(text = "Aceptar")
     }
+
 }
 
 @Composable
