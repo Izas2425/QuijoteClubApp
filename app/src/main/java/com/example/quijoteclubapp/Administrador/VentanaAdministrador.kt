@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.material.icons.rounded.SportsBasketball
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.filled.RecordVoiceOver
+import com.example.quijoteclubapp.Administrador.CategoriaEquipos.DatosCategoriaEquipoViewModel
 import com.example.quijoteclubapp.Administrador.Jugadores.DatosJugadoresViewModel
 import com.example.quijoteclubapp.Administrador.Jugadores.VentanaAltaJugador
 import com.example.quijoteclubapp.Login.LoginViewModel
@@ -47,7 +48,9 @@ import com.example.quijoteclubapp.Login.LoginViewModel
 fun VentanaAdministrador(
     navController: NavHostController,
     datosJugadorVM: DatosJugadoresViewModel,
-    loginVM: LoginViewModel
+    loginVM: LoginViewModel,
+    datosCategoriaEquiposVM: DatosCategoriaEquipoViewModel,
+
 ){
 
     // estado para controlar la apertura/cierre del menu hamburguesa
@@ -179,11 +182,10 @@ fun VentanaAdministrador(
                         // para que cuando pinche en el botón de añadir jugador
                         // se cargue la ventana de alta jugador
                         VentanaJugadores(
-//                            enAddJugador = {estadoVentana.value= "AltaJugador"}
                             enAddJugador = {
                                 datosJugadorVM.iniciarJugadorAdded()
                                 estadoVentana.value = "AltaJugador"
-                            }
+                            }, datosCategoriaEquiposVM, datosJugadorVM
                         )
                     }
                     "Entrenadores" -> {

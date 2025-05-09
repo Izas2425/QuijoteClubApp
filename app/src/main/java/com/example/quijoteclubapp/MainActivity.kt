@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.quijoteclubapp.AdminSettings.AdminSettingsViewModel
+import com.example.quijoteclubapp.Administrador.CategoriaEquipos.DatosCategoriaEquipoViewModel
 import com.example.quijoteclubapp.Administrador.Jugadores.DatosJugadoresViewModel
 import com.example.quijoteclubapp.Administrador.VentanaAdministrador
 import com.example.quijoteclubapp.Aficionado.VentanaAficionado
@@ -27,6 +28,7 @@ class MainActivity : ComponentActivity() {
     val padresMadresVM = PadresMadresViewModel ()
     val adminSettingsVM = AdminSettingsViewModel()
     val datosJugadorVM = DatosJugadoresViewModel ()
+    val datosCategoriaEquiposVM = DatosCategoriaEquipoViewModel ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,6 @@ class MainActivity : ComponentActivity() {
 
             QuijoteClubAppTheme {
                 val navController = rememberNavController()
-//                NavHost(navController = navController, startDestination = Rutas.registrarse){
                 NavHost(navController = navController, startDestination = Rutas.login) {
                     composable(Rutas.login) {
                         LoginScreen(navController, loginVM, datosUsuariVM, adminSettingsVM)
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
                         VentanaPadreMadre()
                     }
                     composable(Rutas.admin){
-                        VentanaAdministrador(navController,datosJugadorVM, loginVM)
+                        VentanaAdministrador(navController,datosJugadorVM, loginVM, datosCategoriaEquiposVM)
                     }
                     composable(Rutas.registrarse) {
                         VentanaRegistrarse(navController,loginVM,padresMadresVM,contexto, datosJugadorVM)

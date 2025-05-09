@@ -60,6 +60,12 @@ class DatosJugadoresViewModel : ViewModel(){
     private val _compite = mutableStateOf(false)
     val compite:State<Boolean> get() = _compite
 
+    private val _equipo = mutableStateOf("")
+    val equipo: State<String> get() = _equipo
+
+    private val _categorias = MutableStateFlow<List<String>>(emptyList())
+    val categorias: StateFlow<List<String>> = _categorias
+
     private val _Error = MutableLiveData<String?>()
     val Error : LiveData<String?> = _Error
 
@@ -81,6 +87,15 @@ class DatosJugadoresViewModel : ViewModel(){
             _Error.value= "El campo no puede estar vacio"
         }else{
             _nombre.value= nuevoNombre
+            _Error.value = null
+        }
+    }
+
+    fun setEquipo(nuevoEquipo: String){
+        if (nuevoEquipo.isEmpty()){
+            _Error.value= "El campo no puede estar vacio"
+        }else{
+            _equipo.value= nuevoEquipo
             _Error.value = null
         }
     }

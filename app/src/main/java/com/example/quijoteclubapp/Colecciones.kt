@@ -8,4 +8,5 @@ object Colecciones {
     val Entrenadores ="entrenadores"
     val Equipos = "equipos"
     val Partidos = "partidos"
+    val CategoriasEquipos = "categoriasEquipos"
 }
