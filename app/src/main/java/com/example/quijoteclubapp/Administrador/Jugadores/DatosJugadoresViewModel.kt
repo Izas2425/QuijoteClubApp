@@ -66,6 +66,9 @@ class DatosJugadoresViewModel : ViewModel(){
     private val _categorias = MutableStateFlow<List<String>>(emptyList())
     val categorias: StateFlow<List<String>> = _categorias
 
+    private val _jugadores = MutableStateFlow<List<Jugador>>(emptyList())
+    val jugadores: StateFlow<List<Jugador>> = _jugadores
+
     private val _Error = MutableLiveData<String?>()
     val Error : LiveData<String?> = _Error
 
@@ -315,5 +318,18 @@ class DatosJugadoresViewModel : ViewModel(){
     }
 
 
+    fun jugadoresPorEquipos(equipoNombre: String) {
+        db.collection("jugadores")
+            .whereEqualTo("equipo", equipoNombre)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val listaJugadores = querySnapshot.documents.mapNotNull { it.toObject(Jugador::class.java) }
+                _jugadores.value = listaJugadores
+            }
+            .addOnFailureListener { e ->
+                _jugadores.value = emptyList()
+                _Error.value = "Error al cargar los jugadores: ${e.message}"
+            }
+    }
 
 }

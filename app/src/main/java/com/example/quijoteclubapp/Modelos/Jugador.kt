@@ -13,6 +13,6 @@ data class Jugador(
     val movilPadreMadre: String = "",
     val fotoPerfil: String = "",
     val compite: Boolean = false,
-    val dorsal: Int = 0,
+    val dorsal: String ="",
     val equipo: String =""
 )

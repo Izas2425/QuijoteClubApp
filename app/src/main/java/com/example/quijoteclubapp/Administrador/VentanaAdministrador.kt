@@ -41,6 +41,7 @@ import androidx.compose.material.icons.filled.RecordVoiceOver
 import com.example.quijoteclubapp.Administrador.CategoriaEquipos.DatosCategoriaEquipoViewModel
 import com.example.quijoteclubapp.Administrador.Jugadores.DatosJugadoresViewModel
 import com.example.quijoteclubapp.Administrador.Jugadores.VentanaAltaJugador
+import com.example.quijoteclubapp.Administrador.Jugadores.VentanaListadoJugadores
 import com.example.quijoteclubapp.Login.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -185,7 +186,8 @@ fun VentanaAdministrador(
                             enAddJugador = {
                                 datosJugadorVM.iniciarJugadorAdded()
                                 estadoVentana.value = "AltaJugador"
-                            }, datosCategoriaEquiposVM, datosJugadorVM
+                            }, datosCategoriaEquiposVM, datosJugadorVM,
+                            enJugadoresMostrados = { estadoVentana.value ="ListadoJugadores"}
                         )
                     }
                     "Entrenadores" -> {
@@ -200,6 +202,14 @@ fun VentanaAdministrador(
                         VentanaAltaJugador(datosJugadorVM, loginVM,
                             enJugadorGuardado = {estadoVentana.value = "Jugadores"}
                         )
+                    }
+                    "ListadoJugadores"->{
+                        VentanaListadoJugadores(datosJugadorVM){
+                            estadoVentana.value = "Jugadores"
+                        }
+//                        ListaJugadoresPorEquipos(datosJugadorVM,
+                    //       enListadoJugadoresMostrado = {estadoVentana.value = "Jugadores"}
+                    //       )
                     }
 
 

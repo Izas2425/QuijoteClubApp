@@ -1,6 +1,7 @@
 package com.example.quijoteclubapp.Administrador.Jugadores
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
@@ -37,7 +40,8 @@ import com.example.quijoteclubapp.R
 fun VentanaJugadores(
     enAddJugador: () -> Unit,
     datosCategoriaEquiposVM: DatosCategoriaEquipoViewModel,
-    datosJugadorVM: DatosJugadoresViewModel
+    datosJugadorVM: DatosJugadoresViewModel,
+    enJugadoresMostrados:() -> Unit
 ){
     Box(
         modifier = Modifier
@@ -58,6 +62,14 @@ fun VentanaJugadores(
             Spacer(modifier = Modifier.height(20.dp))
             categoria_AdminJugadores(datosCategoriaEquiposVM)
             equipos_AdminJugadores(datosCategoriaEquiposVM, datosJugadorVM)
+            Spacer(modifier = Modifier.height(20.dp))
+            Row (
+                horizontalArrangement = Arrangement.spacedBy(80.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                botonAceptarJugadorAdmin(datosJugadorVM, enAceptar ={enJugadoresMostrados()})
+                botonCancelarJugadorAdmin()
+            }
         }
             FloatingActionButton(
                 onClick = { enAddJugador() },
@@ -185,6 +197,46 @@ fun equipos_AdminJugadores(
                 }
             }
         }
-
     }
+}
+
+@Composable
+fun botonAceptarJugadorAdmin(datosJugadorVM: DatosJugadoresViewModel,
+                             enAceptar:() -> Unit
+) {
+    Button(
+        onClick = {
+            datosJugadorVM.jugadoresPorEquipos(datosJugadorVM.equipo.value)
+            enAceptar()
+        },
+        //cuando tenga valor la categoria y el equipo, entonces se hablita el botón
+//        enabled = ,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(R.color.botones),
+            contentColor = colorResource(R.color.textoBotones)
+        )
+    ) {
+        Text("Aceptar")
+    }
+
+}
+
+@Composable
+fun botonCancelarJugadorAdmin(
+
+){
+    Button(
+        onClick = {
+
+        },
+        //cuando tenga valor la categoria y el equipo, entonces se hablita el botón
+//        enabled = ,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(R.color.botones),
+            contentColor = colorResource(R.color.textoBotones)
+        )
+    ) {
+        Text("Cancelar")
+    }
+
 }
