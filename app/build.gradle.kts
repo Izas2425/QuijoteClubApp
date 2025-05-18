@@ -106,4 +106,8 @@ dependencies {
     // para el icono del balon
     implementation ("androidx.compose.material:material-icons-extended:1.7.8")
 
+    // para los gráficos
+    // implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation (libs.mpandroidchart)
+
 }

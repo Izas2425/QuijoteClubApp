@@ -26,10 +26,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import com.example.quijoteclubapp.Modelos.PuntosJugador
 import com.example.quijoteclubapp.R
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 
 @Composable
 fun VentanaEstadisticas(
@@ -184,7 +195,88 @@ fun partidosPorEquipo(equipo:String, entrenadorVM: EntrenadorViewModel){
                 Text("🎯 Tiros fallados:")
                 Text("• Tiros libres fallados: $tirosLibresFallados")
                 Text("• Tiros de campo fallados: $tirosDeCampoFallados")
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+//                // ✅ NUEVO: calcular mapa y mostrar gráfico
+//                val puntosPorJugador: Map<String, Int> =
+//                    convocados.associate { it.dorsal to it.puntos }
+//                GraficaPuntosPorJugador(puntosPorJugador)
+
+                val indicesACB = entrenadorVM.calcularIndiceACBPorJugador(convocados)
+                GraficaIndicesACBPorJugador(indicesACB)
             }
         }
     }
 }
+
+@Composable
+fun GraficaPuntosPorJugador(puntosPorJugador: Map<String, Int>) {
+    val entries = puntosPorJugador.entries.mapIndexed { index, entry ->
+        BarEntry(index.toFloat(), entry.value.toFloat())
+    }
+
+    val barDataSet = BarDataSet(entries, "Puntos por jugador").apply {
+        color = ColorTemplate.MATERIAL_COLORS[0]
+        valueTextSize = 12f
+    }
+
+    val barData = BarData(barDataSet)
+
+    AndroidView(
+        factory = { context ->
+            BarChart(context).apply {
+                data = barData
+                description.isEnabled = false
+                legend.isEnabled = true
+                xAxis.valueFormatter = IndexAxisValueFormatter(puntosPorJugador.keys.toList())
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                xAxis.granularity = 1f
+                axisRight.isEnabled = false
+                animateY(1000)
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .padding(8.dp)
+    )
+}
+
+@Composable
+fun GraficaIndicesACBPorJugador(indicesACB: Map<String, Int>) {
+    val entries = indicesACB.entries.mapIndexed { index, entry ->
+        BarEntry(index.toFloat(), entry.value.toFloat())
+    }
+
+    val context = LocalContext.current
+    val colorInt = ContextCompat.getColor(context, R.color.botones)
+
+    val barDataSet = BarDataSet(entries, "Índice ACB por jugador").apply {
+        color = colorInt
+//        color = ColorTemplate.MATERIAL_COLORS[0]
+        valueTextSize = 12f
+    }
+
+    val barData = BarData(barDataSet)
+
+    AndroidView(
+        factory = { context ->
+            BarChart(context).apply {
+                data = barData
+                description.isEnabled = false
+                legend.isEnabled = true
+                xAxis.valueFormatter = IndexAxisValueFormatter(indicesACB.keys.toList())
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                xAxis.granularity = 1f
+                axisRight.isEnabled = false
+                animateY(1000)
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .padding(8.dp)
+    )
+}
+

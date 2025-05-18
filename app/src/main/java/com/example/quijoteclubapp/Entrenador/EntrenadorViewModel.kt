@@ -125,4 +125,19 @@ class EntrenadorViewModel: ViewModel() {
             }
     }
 
+    fun calcularIndiceACBPorJugador(convocados: List<PuntosJugador>): Map<String, Int> {
+        return convocados.associate { jugador ->
+            val indiceACB = jugador.puntos +
+                    jugador.rebotes +
+                    jugador.asistencias +
+                    jugador.robos +
+                    jugador.tapones -
+                    jugador.tirosDeCampoFallados -
+                    jugador.tirosLibresFallados -
+                    jugador.perdidas -
+                    jugador.faltasCometidas
+            jugador.dorsal to indiceACB
+        }
+    }
+
 }
