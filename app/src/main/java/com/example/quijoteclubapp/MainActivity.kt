@@ -14,6 +14,8 @@ import com.example.quijoteclubapp.Administrador.Jugadores.DatosJugadoresViewMode
 import com.example.quijoteclubapp.Administrador.VentanaAdministrador
 import com.example.quijoteclubapp.Aficionado.VentanaAficionado
 import com.example.quijoteclubapp.DatosUsuario.DatosUsuarioViewModel
+import com.example.quijoteclubapp.Entrenador.EntrenadorViewModel
+import com.example.quijoteclubapp.Entrenador.VentanaEntrenador
 import com.example.quijoteclubapp.Jugador.VentanaJugador
 import com.example.quijoteclubapp.Login.LoginScreen
 import com.example.quijoteclubapp.Login.LoginViewModel
@@ -29,6 +31,7 @@ class MainActivity : ComponentActivity() {
     val adminSettingsVM = AdminSettingsViewModel()
     val datosJugadorVM = DatosJugadoresViewModel ()
     val datosCategoriaEquiposVM = DatosCategoriaEquipoViewModel ()
+    val entrenadorVM = EntrenadorViewModel ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +59,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(Rutas.jugador){
                         VentanaJugador ()
+                    }
+                    composable(Rutas.entrenador){
+                        VentanaEntrenador(loginVM, entrenadorVM)
                     }
 
                 }

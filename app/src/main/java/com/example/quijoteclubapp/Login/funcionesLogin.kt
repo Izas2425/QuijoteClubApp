@@ -226,7 +226,7 @@ fun LoginScreen(
                             //navController.navigate(Rutas.admin)
                         }
                         "Jugador" -> navController.navigate(Rutas.jugador)
-
+                        "Entrenador" -> navController.navigate(Rutas.entrenador)
                     }
                 }
             }

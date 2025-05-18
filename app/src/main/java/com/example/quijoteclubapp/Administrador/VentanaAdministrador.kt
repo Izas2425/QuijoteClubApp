@@ -207,9 +207,6 @@ fun VentanaAdministrador(
                         VentanaListadoJugadores(datosJugadorVM){
                             estadoVentana.value = "Jugadores"
                         }
-//                        ListaJugadoresPorEquipos(datosJugadorVM,
-                    //       enListadoJugadoresMostrado = {estadoVentana.value = "Jugadores"}
-                    //       )
                     }
 
 

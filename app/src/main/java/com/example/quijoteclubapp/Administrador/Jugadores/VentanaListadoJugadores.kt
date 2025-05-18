@@ -33,6 +33,11 @@ import coil.compose.AsyncImage
 import com.example.quijoteclubapp.R
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.ui.draw.clip
 
 @Composable
@@ -40,20 +45,13 @@ fun VentanaListadoJugadores(datosJugadorVM: DatosJugadoresViewModel,
                             enAceptar: () -> Unit) {
 
     val jugadores by datosJugadorVM.jugadores.collectAsState()
-Column (modifier = Modifier.fillMaxSize()) {
+
     Text(
         text = "Ventana  listado de jugadores",
         color = colorResource(R.color.texto),
         fontSize = 20.sp,
         modifier = Modifier.padding(10.dp)
     )
-
-
-//    LazyColumn {
-//        items(jugadores) { jugador ->
-//            Text("- ${jugador.nombre} ${jugador.apellidos}")
-//        }
-//    }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(1), // 2 columnas
@@ -64,65 +62,93 @@ Column (modifier = Modifier.fillMaxSize()) {
         items(jugadores) { jugador ->
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-//                    .aspectRatio(1f), // cuadrado
-//                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
 
+                    .fillMaxWidth()
+            ) {
                 Column(
-//                        modifier = Modifier.weight(1f)
-//                        horizontalAlignment = Alignment.CenterHorizontally,
-//                        verticalArrangement = Arrangement.Center,
-//                        modifier = Modifier.padding(12.dp)
+                    modifier = Modifier
+                        .padding(top = 12.dp, start = 12.dp, end = 12.dp) // sin bottom
+                        .fillMaxWidth()
                 ) {
                     Row(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth(),
+//                    modifier = Modifier
+//                        .padding(12.dp)
+//                        .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            jugador.nombre,
-                            color = colorResource(R.color.texto),
-                            fontSize = 12.sp,
-                            modifier = Modifier.padding(10.dp)
-                        )
-//                        Spacer(modifier = Modifier.width(160.dp))
-                        Spacer(modifier = Modifier.weight(1f)) // empuja la imagen a la derecha
-                        AsyncImage(
-                            model = jugador.fotoPerfil,
-                            contentDescription = "Foto de ${jugador.nombre}",
-                            modifier = Modifier
-                                .size(60.dp)
-//                                    .clip(RoundedCornerShape(50))
-                        )
+                        // Columna izquierda: nombre y dorsal
+                        Column(
+                            modifier = Modifier.weight(1f) // ocupa todo el espacio restante
+                        ) {
+                            Text(
+                                text = jugador.nombre,
+                                color = colorResource(R.color.texto),
+                                fontSize = 14.sp,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            Text(
+                                text = "Dorsal: ${jugador.dorsal}",
+                                color = colorResource(R.color.texto),
+                                fontSize = 12.sp
+                            )
+                        }
 
-
+                        // Columna derecha: imagen
+                        Column(
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            AsyncImage(
+                                model = jugador.fotoPerfil,
+                                contentDescription = "Foto de ${jugador.nombre}",
+                                modifier = Modifier.size(60.dp)
+                            )
+                        }
                     }
-                    Text(
-                        "Dorsal: ${jugador.dorsal}",
-                        color = colorResource(R.color.texto),
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(10.dp)
-                    )
+                    // Fila inferior: iconos de acción
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+//                        .padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(onClick = {
+                            // Acción de actualizar
+                            // datosJugadorVM.actualizarJugador(jugador)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = "Actualizar jugador"
+                            )
+                        }
+                        IconButton(onClick = {
+                            // Acción de eliminar
+                            // datosJugadorVM.eliminarJugador(jugador)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "Eliminar jugador",
+//                            tint = Color.Red
+                            )
+                        }
+                    }
                 }
             }
         }
-
-    }
-
-//    Spacer(Modifier.height(20.dp))
-
-    Button(
-        onClick = { enAceptar() },
-        colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(R.color.botones),
-            contentColor = colorResource(R.color.textoBotones)
-        )
-    )
-    {
-        Text("Volver")
+        // Botón como último ítem scrollable
+        item {
+            Button(
+                onClick = { enAceptar() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(R.color.botones),
+                    contentColor = colorResource(R.color.textoBotones)
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            ) {
+                Text("Volver")
+            }
+        }
     }
 }
 
-}

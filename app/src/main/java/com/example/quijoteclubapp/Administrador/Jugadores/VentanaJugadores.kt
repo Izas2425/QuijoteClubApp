@@ -1,5 +1,6 @@
 package com.example.quijoteclubapp.Administrador.Jugadores
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -60,7 +61,7 @@ fun VentanaJugadores(
 
             Spacer(modifier = Modifier.height(20.dp))
             Spacer(modifier = Modifier.height(20.dp))
-            categoria_AdminJugadores(datosCategoriaEquiposVM)
+            categoria_AdminJugadores(datosCategoriaEquiposVM, datosJugadorVM)
             equipos_AdminJugadores(datosCategoriaEquiposVM, datosJugadorVM)
             Spacer(modifier = Modifier.height(20.dp))
             Row (
@@ -89,7 +90,10 @@ fun VentanaJugadores(
 }
 
 @Composable
-fun categoria_AdminJugadores(datosCategoriaEquiposVM: DatosCategoriaEquipoViewModel) {
+fun categoria_AdminJugadores(
+    datosCategoriaEquiposVM: DatosCategoriaEquipoViewModel,
+    datosJugadorVM: DatosJugadoresViewModel
+) {
 
     val categorias by datosCategoriaEquiposVM.categorias.collectAsState()
 
@@ -133,6 +137,7 @@ fun categoria_AdminJugadores(datosCategoriaEquiposVM: DatosCategoriaEquipoViewMo
                         expanded = false
                         selectedText = categoria
                         datosCategoriaEquiposVM.setCategoria(categoria)
+                        datosJugadorVM.setCategoria(categoria)
                     })
                 }
             }
@@ -204,13 +209,20 @@ fun equipos_AdminJugadores(
 fun botonAceptarJugadorAdmin(datosJugadorVM: DatosJugadoresViewModel,
                              enAceptar:() -> Unit
 ) {
+
+    val categoria by  datosJugadorVM.categoria
+    val equipo by datosJugadorVM.equipo
+
+    val elegido  = categoria.isNotEmpty() && equipo.isNotEmpty()
+    Log.e("Izaskun", "categoria: ${categoria} y equipo:${equipo}")
+    Log.e("Izaskun", "elegido: ${elegido}")
+
     Button(
         onClick = {
             datosJugadorVM.jugadoresPorEquipos(datosJugadorVM.equipo.value)
             enAceptar()
         },
-        //cuando tenga valor la categoria y el equipo, entonces se hablita el botón
-//        enabled = ,
+        enabled = elegido,
         colors = ButtonDefaults.buttonColors(
             containerColor = colorResource(R.color.botones),
             contentColor = colorResource(R.color.textoBotones)
@@ -218,7 +230,6 @@ fun botonAceptarJugadorAdmin(datosJugadorVM: DatosJugadoresViewModel,
     ) {
         Text("Aceptar")
     }
-
 }
 
 @Composable

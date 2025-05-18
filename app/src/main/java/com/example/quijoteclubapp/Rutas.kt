@@ -8,7 +8,7 @@ object Rutas {
     val admin = "admin"
     val partidos = "partidos"
     val jugadoresAdmin = "jugadoresAdmin"
-    val entrenadores = "entrenadores"
+    val entrenador = "entrenador"
     val eventos = "eventos"
     val jugador = "jugador"
 
