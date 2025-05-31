@@ -6,12 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.quijoteclubapp.Modelos.Entrenador
+import com.example.quijoteclubapp.Modelos.JugadorIndice
 import com.example.quijoteclubapp.Modelos.Partido
 import com.example.quijoteclubapp.Modelos.PuntosJugador
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.time.LocalDate
 
 class EntrenadorViewModel: ViewModel() {
     // Para la base de datos que contendrá  a los entrenadores
@@ -41,7 +43,11 @@ class EntrenadorViewModel: ViewModel() {
     private val  _convocados = MutableStateFlow<PuntosJugador?>(null)
     val convocados :StateFlow<PuntosJugador?> = _convocados
 
+    private val _ultimosPartidos = MutableStateFlow<List<Partido>>(emptyList())
+    val ultimosPartidos: StateFlow<List<Partido>> = _ultimosPartidos
 
+    private val _convocatoriaSugerida = MutableStateFlow<List<JugadorIndice>>(emptyList())
+    val convocatoriaSugerida: StateFlow<List<JugadorIndice>> = _convocatoriaSugerida
 
     private val _Error = MutableLiveData<String?>()
     val Error : LiveData<String?> = _Error
@@ -140,4 +146,46 @@ class EntrenadorViewModel: ViewModel() {
         }
     }
 
+    fun limpiarPartidoSeleccionado() {
+        _partidoSeleccionado.value = null
+    }
+
+    fun prepararUltimosPartidosParaConvocatoria() {
+        val equipoActual = _equipo.value
+
+        val partidosOrdenados = _partidos.value
+            .filter { it.equipoClub == equipoActual } // Filtra por el equipo seleccionado
+            .sortedByDescending { LocalDate.parse(it.fecha) } // Ordena por fecha descendente
+            .take(4) // Toma los 4 más recientes
+
+        _ultimosPartidos.value = partidosOrdenados
+    }
+
+    fun sugerirConvocatoriaDesdeUltimosPartidos() {
+        val partidos = _ultimosPartidos.value
+        if (partidos.size < 4) {
+            _Error.value = "Se necesitan al menos 4 partidos para calcular la convocatoria."
+            return
+        }
+
+        val jugadoresMap = mutableMapOf<String, MutableList<Int>>()
+
+        for (partido in partidos) {
+            val indices = calcularIndiceACBPorJugador(partido.convocados)
+            for ((dorsal, indice) in indices) {
+                jugadoresMap.getOrPut(dorsal) { mutableListOf() }.add(indice)
+            }
+        }
+
+        val promedios = jugadoresMap.mapNotNull { (dorsal, indices) ->
+            if (indices.size == 4) {
+                val media = indices.average().toInt()
+                JugadorIndice(dorsal, media)
+            } else null
+        }
+
+        _convocatoriaSugerida.value = promedios
+            .sortedByDescending { it.promedioIndice }
+            .take(5)
+    }
 }

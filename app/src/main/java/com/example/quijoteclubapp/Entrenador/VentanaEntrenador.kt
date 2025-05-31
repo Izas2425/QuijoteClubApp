@@ -105,7 +105,9 @@ fun VentanaEntrenador(loginVM: LoginViewModel, entrenadorVM: EntrenadorViewModel
                     }
 
                     Button(
-                        onClick = { pantallaActiva.value = "Convocatoria" },
+                        onClick = {
+                            entrenadorVM.partidosDelEquipo(entrenadorVM.equipo.value)
+                            pantallaActiva.value = "Convocatoria" },
                         enabled = elegido,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorResource(R.color.botones),
@@ -136,8 +138,11 @@ fun VentanaEntrenador(loginVM: LoginViewModel, entrenadorVM: EntrenadorViewModel
 
                     "Convocatoria" -> {
                         // Aquí iría tu pantalla de convocatoria sugerida
-                        Text("Aquí se mostrará la convocatoria sugerida.")
+//                        Text("Aquí se mostrará la convocatoria sugerida.")
                         // VentanaConvocatoriaSugerida(entrenadorVM.equipo.value)
+
+                        VentanaConvocatoriaSugerida(entrenadorVM)
+
                     }
                 }
             }

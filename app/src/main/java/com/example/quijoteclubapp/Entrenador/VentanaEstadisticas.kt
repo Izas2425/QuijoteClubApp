@@ -75,7 +75,10 @@ fun VentanaEstadisticas(
         Spacer(modifier = Modifier.height(6.dp))
 
         Button(
-            onClick = { onAceptar() },
+            onClick = {
+                entrenadorVM.limpiarPartidoSeleccionado()
+                onAceptar()
+                      },
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.botones),
                 contentColor = colorResource(R.color.textoBotones)
