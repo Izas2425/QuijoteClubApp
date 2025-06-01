@@ -149,6 +149,9 @@ class EntrenadorViewModel: ViewModel() {
     fun limpiarPartidoSeleccionado() {
         _partidoSeleccionado.value = null
     }
+    fun limpiarEquipo() {
+        _equipo.value = ""
+    }
 
     fun prepararUltimosPartidosParaConvocatoria() {
         val equipoActual = _equipo.value

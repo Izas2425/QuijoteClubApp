@@ -95,7 +95,8 @@ fun VentanaEntrenador(loginVM: LoginViewModel, entrenadorVM: EntrenadorViewModel
                 ) {
                     Button(
                         onClick = { pantallaActiva.value = "Estadisticas" },
-                        enabled = elegido,
+                        enabled = equipo.isNotEmpty(),
+//                        enabled = elegido,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorResource(R.color.botones),
                             contentColor = colorResource(R.color.textoBotones)
@@ -128,7 +129,10 @@ fun VentanaEntrenador(loginVM: LoginViewModel, entrenadorVM: EntrenadorViewModel
                         VentanaEstadisticas(
                             entrenadorVM.equipo.value,
                             entrenadorVM,
-                            onAceptar ={ pantallaActiva.value = "Inicio"}
+                            onAceptar ={
+                                entrenadorVM.limpiarEquipo()
+                                pantallaActiva.value = "Inicio"
+                            }
                             )
 
                         // Aquí iría tu pantalla de estadísticas
@@ -141,7 +145,10 @@ fun VentanaEntrenador(loginVM: LoginViewModel, entrenadorVM: EntrenadorViewModel
 //                        Text("Aquí se mostrará la convocatoria sugerida.")
                         // VentanaConvocatoriaSugerida(entrenadorVM.equipo.value)
 
-                        VentanaConvocatoriaSugerida(entrenadorVM)
+                        VentanaConvocatoriaSugerida(
+                            entrenadorVM,
+                            onAceptar={pantallaActiva.value = "Inicio"}
+                            )
 
                     }
                 }
